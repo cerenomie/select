@@ -13,77 +13,31 @@
 #include "libft/libft.h"
 #include "includes/ft_select.h"
 
-static int		count_len(t_list *list)
+static int	*print_element(int *coords, t_list *list, int *written_lines, int index)
 {
-	size_t	max_len;
-
-	max_len = 0;
-	while (list)
-	{
-		if (ft_strlen(list->name) > max_len)
-			max_len = ft_strlen(list->name);
-		list = list->next;
-	}
-	return (max_len + 1);
-}
-
-static void		print_spaces(int nbr_spaces)
-{
-	int		i;
-
-	i = 0;
-	while (i < nbr_spaces)
-	{
-		ft_putchar(' ');
-		i++;
-	}
-}
-
-static int		finish_line(t_list *list, int spaces)
-{
-	ft_putendl("");
-	ft_putstr(list->name);
-	print_spaces(spaces);
-	return (1);
-}
-
-static int		*get_lines_n_col(int *coords, t_list *list, int spaces, int *i)
-{
-	if (*i < coords[0])
-	{
-		ft_putstr(list->name);
-		if (coords[2] == 1)
-			coords[3]++;
-		if (*i + 1 < coords[0])
-			print_spaces(spaces);
-		(*i)++;
-	}
-	else
-	{
-		*i = finish_line(list, spaces);
-		coords[2] += 1;
-	}
+	if (list->index == index)
+		tputs(tgetstr("us", NULL), 1, tputs_putchar);
+	if (list->select == 1)
+		tputs(tgetstr("mr", NULL), 1, tputs_putchar);
+	coords = get-lines_n_col(coords, list, *written_lines);
 	return (coords);
 }
 
-int				*print_list(t_list *list)
+int			*print_list(t_list *list, int index)
 {
-	int		spaces;
 	int		*coords;
-	int		i;
+	int		written_lines;
 
-	coords = malloc(sizeof(int) * 4);
-	coords[1] = count_len(list);
-	coords[0] = get_term_size(1) / coords[1];
-	coords[2] = 1;
-	coords[3] = 0;
-	i = 0;
-	while (list)
+	written_lines = 1;
+	tputs(tgetstr("cl", NULL), 1, tputs_putchar);
+	coords = init_coords(list);
+	while (list->index < list->next->index)
 	{
-		spaces = coords[1] - ft_strlen(list->name);
-		coords = get_lines_n_col(coords, list, spaces, &i);
+		coords = print_element(coords, list, &written_lines, index);
+		written_lines++;
+		if (written_lines + 1 >= coords[0])
+			written_lines = 0;
 		list = list->next;
 	}
-	ft_putendl("");
-	return (coords);
+
 }
