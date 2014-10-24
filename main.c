@@ -20,14 +20,13 @@ int			main(int argc, char **argv)
 	if (argc == 1)
 		return (0);
 	list = NULL;
+	max_elem = argc - 1;
 	while (argc > 1)
 	{
 		list = add_list(list, argv[argc - 1]);
 		argc--;
 	}
-	max_elem = set_index(list);
-	select_list(list, 3);
-	max_elem = del_list(list, 2);
-	ft_init_prog(list, max_elem);
+	set_index(list, max_elem);
+	list = make_cycle_list(list);
 	return (0);
 }

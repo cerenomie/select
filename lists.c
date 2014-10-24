@@ -12,12 +12,12 @@
 
 #include "includes/ft_select.h"
 
-int			set_index(t_list *list)
+int			set_index(t_list *list, int max_elem)
 {
 	int		i;
 
 	i = 1;
-	while (list)
+	while (i < max_elem + 1)
 	{
 		list->index = i;
 		list = list->next;
@@ -34,6 +34,17 @@ void		select_list(t_list *list, int index)
 		list->select = 0;
 	else
 		list->select = 1;
+}
+
+t_list	*make_cycle_list(t_list *list)
+{
+	t_list	*tmp;
+
+	tmp = list;
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	tmp->next = list;
+	return (list);
 }
 
 int		del_list(t_list *list, int index)
